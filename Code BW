@@ -1,0 +1,1003 @@
+#include <iostream>
+
+using namespace std;
+
+
+
+
+//Funcion para crear el tablero
+void Tabla(char iTable[10][10], int iSizeR, int iSizeC, int &iP1Ren, int &iP1Col, int &iP2Ren, int &iP2Col, int &iNumX, int &iNumY)
+{
+    char cRaya='-';
+    char iP1='X';
+    char iP2='O';
+    int iCol;
+
+
+    for (int iRen=0; iRen<iSizeR; iRen++)
+    {
+
+        for (iCol=0; iCol<iSizeC; iCol++)
+        {
+
+            if ((iRen==0 && iCol==0) || (iRen==0 && iCol==4))
+            {
+                iTable[iRen][iCol]=iP1;
+            }
+            else
+
+                if ((iRen==4 && iCol==0) || (iRen==4 && iCol==4))
+                {
+                    iTable[iRen][iCol]=iP2;
+
+                }
+                else
+
+                    iTable[iRen][iCol]=cRaya;
+        }
+    }
+
+    iNumX=2;
+    iNumY=2;
+
+}
+
+
+
+
+//Funcion para mostrar el tablero
+void Mostrar(char iTable[10][10], int iSizeR, int iSizeC)
+{
+
+    int iCont2=0;
+
+    for (int iCont=0; iCont<5; iCont++)
+    {
+        cout <<"\t" <<iCont;
+    }
+    cout<< endl;
+
+
+    for(int iRen=0; iRen<iSizeR; iRen++)
+    {
+        cout<<iCont2<<"\t";
+        for(int iCol=0; iCol<iSizeC; iCol++)
+        {
+            cout<<iTable[iRen][iCol]<<" \t ";
+        }
+        cout<<endl;
+        iCont2++;
+    }
+
+}
+
+
+
+//Funcion para mostrar los tipos de movimientos
+void MostrarMoves()
+{
+    cout<<"a - izq  ";
+    cout<<"x - aba  ";
+    cout<<"w - arr  ";
+    cout<<"d - der"<<endl;
+    cout<<"q - arr + izq ";
+    cout<<"e - arr + der"<<endl;
+    cout<<"z - aba + izq ";
+    cout<<"c - aba + der"<<endl;
+}
+
+
+
+//Funcion para escoger y validar la casilla de la ficha del jugador 1
+void casilla1(char iTable[10][10], int &iPosRen, int &iPosCol)
+{
+
+    int iRen, iCol;
+
+    do{
+        cout<<"Ingrese el numero de renglon  de la casilla que quiere mover: ";
+        cin>>iRen;
+
+        cout<<"Ingrese el numero de columna  de la casilla que quiere mover: ";
+        cin>>iCol;
+
+
+        if ((iRen<0 || iRen>=5)|| (iCol<0 || iCol>=5))
+            cout<<"Casilla inexistente"<<endl;
+            cout<<endl;
+
+        if (iTable[iRen][iCol]=='X')
+        {
+        iPosRen=iRen;
+        iPosCol=iCol;
+        }
+
+
+    }while ((iRen<0 || iRen>4)|| (iCol<0 || iCol>4) || (iTable[iRen][iCol]=='-' || iTable[iRen][iCol]=='O'));
+
+}
+
+//Funcion para escoger y validar la casilla de la ficha del jugador 2
+void casilla2(char iTable[10][10], int &iPosRen, int &iPosCol)
+{
+
+    int iRen, iCol;
+
+    do{
+        cout<<"Ingrese el numero de renglon  de la casilla que quiere mover: ";
+        cin>>iRen;
+
+        cout<<"Ingrese el numero de columna  de la casilla que quiere mover: ";
+        cin>>iCol;
+
+        if ((iRen<0 || iRen>=5)|| (iCol<0 || iCol>=5))
+            cout<<"Casilla inexistente"<<endl;
+
+        if (iTable[iRen][iCol]=='O')
+        {
+        iPosRen=iRen;
+        iPosCol=iCol;
+        }
+
+
+    }while ((iRen<0 || iRen>4)|| (iCol<0 || iCol>4) || (iTable[iRen][iCol]=='-' || iTable[iRen][iCol]=='X'));
+
+}
+
+
+
+
+//Funcion para que el jugador 1 pueda mover los blobs
+void moverjugador1(char iTabla[10][10], int &iPRen, int &iPCol, int &iNumX, int &iNumY, char &iMov)
+{
+    char cMove, cRep;
+    int iPR=iPRen;
+    int iPC=iPCol;
+    int iValor;
+
+    do{
+        cin>>cMove;
+
+        switch(cMove)
+        {case 'w':
+
+            iPR--;
+            if (iPR>=0 && iPR<5 && iTabla[iPR][iPC]=='-')
+            {
+                iPRen=iPR;
+                iTabla[iPRen][iPCol]='X';
+                iNumX++;
+                iMov='s';
+                cRep='n';
+            }
+            else
+                if (iPR<0 || iPR>5)
+                {
+                    iMov='n';
+                    cRep='n';
+                    cout<<"Perdiste turno"<<endl;
+                }
+                else
+                    if (iPR>=0 && iPR<5 && iTabla[iPR][iPC]!='-')
+                    {
+                        cout<<"Casilla ocupada, vuelva a introducir"<<endl;
+                        cRep='s';
+
+                    }
+
+            break;
+
+
+
+        case 'x':
+            iPR++;
+            if (iPR>=0 && iPR<5 && iTabla[iPR][iPC]=='-')
+            {
+                iPRen=iPR;
+                iTabla[iPRen][iPCol]='X';
+                iNumX++;
+                iMov='s';
+                cRep='n';
+            }
+            else
+                if (iPR<0 || iPR>5)
+                {
+                    iMov='n';
+                    cRep='n';
+                    cout<<"Perdiste turno"<<endl;
+                }
+                else
+                    if (iPR>=0 && iPR<5 && iTabla[iPR][iPC]!='-')
+                    {
+                        cout<<"Casilla ocupada, vuelva a introducir"<<endl;
+                        cRep='s';
+
+                    }
+
+
+            break;
+
+
+
+        case 'a':
+            iPC--;
+            if (iPC>=0 && iPC<5 && iTabla[iPR][iPC]=='-')
+            {
+                iPCol=iPC;
+                iTabla[iPRen][iPCol]='X';
+                iNumX++;
+                iMov='s';
+                cRep='n';
+            }
+                else
+                if (iPC<0 || iPC>5)
+                {
+                    iMov='n';
+                    cRep='n';
+                    cout<<"Perdiste turno"<<endl;
+                }
+                else
+                    if (iPC>=0 && iPC<5 && iTabla[iPR][iPC]!='-')
+                    {
+                        cout<<"Casilla ocupada, vuelva a introducir"<<endl;
+                        cRep='s';
+
+                    }
+
+
+            break;
+
+
+
+        case 'd':
+            iPC++;
+            if (iPC>=0 && iPC<5 && iTabla[iPR][iPC]=='-')
+            {
+                iPCol=iPC;
+                iTabla[iPRen][iPCol]='X';
+                iNumX++;
+                iMov='s';
+                cRep='n';
+            }
+                else
+                if (iPC<0 || iPC>5)
+                {
+                    iMov='n';
+                    cout<<"Perdiste turno"<<endl;
+                }
+                else
+                    if (iPC>=0 && iPC<5 && iTabla[iPR][iPC]!='-')
+                    {
+                        cout<<"Casilla ocupada, vuelva a introducir"<<endl;
+                        cRep='s';
+
+                    }
+
+            break;
+
+
+
+        case 'q':
+            iPR--;
+            iPC--;
+            if ((iPR>=0&&iPR<5) && (iPC>=0&&iPC<5) && iTabla[iPR][iPC]=='-')
+            {
+                iPRen=iPR;
+                iPCol=iPC;
+                iTabla[iPRen][iPCol]='X';
+                iNumX++;
+                iMov='s';
+            }
+                else
+                if ((iPR<0 || iPR>5)||(iPC<0 || iPR>5))
+                {
+                    iMov='n';
+                    cRep='n';
+                    cout<<"Perdiste turno"<<endl;
+                }
+                else
+                    if ((iPR>=0&&iPR<5) && (iPC>=0&&iPC<5) && iTabla[iPR][iPC]!='-')
+                    {
+                        cout<<"Casilla ocupada, vuelva a introducir"<<endl;
+                        cRep='s';
+
+                    }
+
+            break;
+
+
+
+        case 'e':
+            iPR--;
+            iPC++;
+            if ((iPR>=0&&iPR<5) && (iPC>=0&&iPC<5) && iTabla[iPR][iPC]=='-')
+            {
+                iPRen=iPR;
+                iPCol=iPC;
+                iTabla[iPRen][iPCol]='X';
+                iNumX++;
+                iMov='s';
+                cRep='n';
+            }
+                else
+                if ((iPR<0 || iPR>5)||(iPC<0 || iPR>5))
+                {
+                    iMov='n';
+                    cRep='n';
+                    cout<<"Perdiste turno"<<endl;
+                }
+                else
+                    if ((iPR>=0&&iPR<5) && (iPC>=0&&iPC<5) && iTabla[iPR][iPC]!='-')
+                    {
+                        cout<<"Casilla ocupada, vuelva a introducir"<<endl;
+                        cRep='s';
+
+                    }
+
+            break;
+
+
+        case 'z':
+            iPR++;
+            iPC--;
+            if ((iPR>=0&&iPR<5) && (iPC>=0&&iPC<5) && iTabla[iPR][iPC]=='-')
+            {
+                iPRen=iPR;
+                iPCol=iPC;
+                iTabla[iPRen][iPCol]='X';
+                iNumX++;
+                iMov='s';
+                cRep='n';
+            }
+                else
+                if ((iPR<0 || iPR>5)||(iPC<0 || iPR>5))
+                {
+                    iMov='n';
+                    cRep='n';
+                    cout<<"Perdiste turno"<<endl;
+                }
+                else
+                    if ((iPR>=0&&iPR<5) && (iPC>=0&&iPC<5) && iTabla[iPR][iPC]!='-')
+                    {
+                        cout<<"Casilla ocupada, vuelva a introducir"<<endl;
+                        cRep='s';
+
+                    }
+
+            break;
+
+
+        case 'c':
+            iPR++;
+            iPC++;
+            if ((iPR>=0&&iPR<5) && (iPC>=0&&iPC<5) && iTabla[iPR][iPC]=='-')
+            {
+                iPRen=iPR;
+                iPCol=iPC;
+                iTabla[iPRen][iPCol]='X';
+                iNumX++;
+                iMov='s';
+                cRep='n';
+            }
+                else
+                if ((iPR<0 || iPR>5)||(iPC<0 || iPR>5))
+                {
+                    iMov='n';
+                    cRep='n';
+                    cout<<"Perdiste turno"<<endl;
+                }
+                else
+                    if ((iPR>=0&&iPR<5) && (iPC>=0&&iPC<5) && iTabla[iPR][iPC]!='-')
+                    {
+                        cout<<"Casilla ocupada, vuelva a introducir"<<endl;
+                        cRep='s';
+
+                    }
+
+                break;
+
+        default:
+            cout<<"Movimiento inexistente: Vuelve a introducir"<<endl;
+        }
+
+    }while((cMove!='a' && cMove!='x' && cMove!='w' && cMove!='d' && cMove!='q' && cMove!='e' && cMove!='z' && cMove!='c') || cRep=='s');
+
+}
+
+
+//Funcion para que el jugador 2 pueda mover los blobs
+void moverjugador2(char iTabla[10][10], int &iPRen, int &iPCol, int &iNumX, int &iNumY, char &iMov)
+{
+    char cMove, cRep;
+    int iPR=iPRen;
+    int iPC=iPCol;
+    int iValor;
+
+    do{
+        cin>>cMove;
+
+        switch(cMove)
+        {case 'w':
+
+            iPR--;
+            if (iPR>=0 && iPR<5 && iTabla[iPR][iPC]=='-')
+            {
+                iPRen=iPR;
+                iTabla[iPRen][iPCol]='O';
+                iNumX++;
+                iMov='s';
+                cRep='n';
+            }
+            else
+                if (iPR<0 || iPR>5)
+                {
+                    iMov='n';
+                    cRep='n';
+                    cout<<"Perdiste turno"<<endl;
+                }
+                else
+                    if (iPR>=0 && iPR<5 && iTabla[iPR][iPC]!='-')
+                    {
+                        cout<<"Casilla ocupada, vuelva a introducir"<<endl;
+                        cRep='s';
+
+                    }
+
+            break;
+
+
+
+        case 'x':
+            iPR++;
+            if (iPR>=0 && iPR<5 && iTabla[iPR][iPC]=='-')
+            {
+                iPRen=iPR;
+                iTabla[iPRen][iPCol]='O';
+                iNumX++;
+                iMov='s';
+                cRep='n';
+            }
+            else
+                if (iPR<0 || iPR>5)
+                {
+                    iMov='n';
+                    cRep='n';
+                    cout<<"Perdiste turno"<<endl;
+                }
+                else
+                    if (iPR>=0 && iPR<5 && iTabla[iPR][iPC]!='-')
+                    {
+                        cout<<"Casilla ocupada, vuelva a introducir"<<endl;
+                        cRep='s';
+
+                    }
+
+
+            break;
+
+
+
+        case 'a':
+            iPC--;
+            if (iPC>=0 && iPC<5 && iTabla[iPR][iPC]=='-')
+            {
+                iPCol=iPC;
+                iTabla[iPRen][iPCol]='O';
+                iNumX++;
+                iMov='s';
+                cRep='n';
+            }
+                else
+                if (iPC<0 || iPC>5)
+                {
+                    iMov='n';
+                    cRep='n';
+                    cout<<"Perdiste turno"<<endl;
+                }
+                else
+                    if (iPC>=0 && iPC<5 && iTabla[iPR][iPC]!='-')
+                    {
+                        cout<<"Casilla ocupada, vuelva a introducir"<<endl;
+                        cRep='s';
+
+                    }
+
+
+            break;
+
+
+
+        case 'd':
+            iPC++;
+            if (iPC>=0 && iPC<5 && iTabla[iPR][iPC]=='-')
+            {
+                iPCol=iPC;
+                iTabla[iPRen][iPCol]='O';
+                iNumX++;
+                iMov='s';
+                cRep='n';
+            }
+                else
+                if (iPC<0 || iPC>5)
+                {
+                    iMov='n';
+                    cRep='n';
+                    cout<<"Perdiste turno"<<endl;
+                }
+                else
+                    if (iPC>=0 && iPC<5 && iTabla[iPR][iPC]!='-')
+                    {
+                        cout<<"Casilla ocupada, vuelva a introducir"<<endl;
+                        cRep='s';
+
+                    }
+
+            break;
+
+
+
+        case 'q':
+            iPR--;
+            iPC--;
+            if ((iPR>=0&&iPR<5) && (iPC>=0&&iPC<5) && iTabla[iPR][iPC]=='-')
+            {
+                iPRen=iPR;
+                iPCol=iPC;
+                iTabla[iPRen][iPCol]='O';
+                iNumX++;
+                iMov='s';
+                cRep='n';
+            }
+                else
+                if ((iPR<0 || iPR>5)||(iPC<0 || iPR>5))
+                {
+                    iMov='n';
+                    cRep='n';
+                    cout<<"Perdiste turno"<<endl;
+                }
+                else
+                    if ((iPR>=0&&iPR<5) && (iPC>=0&&iPC<5) && iTabla[iPR][iPC]!='-')
+                    {
+                        cout<<"Casilla ocupada, vuelva a introducir"<<endl;
+                        cRep='s';
+
+                    }
+
+            break;
+
+
+
+        case 'e':
+            iPR--;
+            iPC++;
+            if ((iPR>=0&&iPR<5) && (iPC>=0&&iPC<5) && iTabla[iPR][iPC]=='-')
+            {
+                iPRen=iPR;
+                iPCol=iPC;
+                iTabla[iPRen][iPCol]='O';
+                iNumX++;
+                iMov='s';
+                cRep='n';
+            }
+                else
+                if ((iPR<0 || iPR>5)||(iPC<0 || iPR>5))
+                {
+                    iMov='n';
+                    cRep='n';
+                    cout<<"Perdiste turno"<<endl;
+                }
+                else
+                    if ((iPR>=0&&iPR<5) && (iPC>=0&&iPC<5) && iTabla[iPR][iPC]!='-')
+                    {
+                        cout<<"Casilla ocupada, vuelva a introducir"<<endl;
+                        cRep='s';
+
+                    }
+
+            break;
+
+
+        case 'z':
+            iPR++;
+            iPC--;
+            if ((iPR>=0&&iPR<5) && (iPC>=0&&iPC<5) && iTabla[iPR][iPC]=='-')
+            {
+                iPRen=iPR;
+                iPCol=iPC;
+                iTabla[iPRen][iPCol]='O';
+                iNumX++;
+                iMov='s';
+                cRep='n';
+            }
+                else
+                if ((iPR<0 || iPR>5)||(iPC<0 || iPR>5))
+                {
+                    iMov='n';
+                    cRep='n';
+                    cout<<"Perdiste turno"<<endl;
+                }
+                else
+                    if ((iPR>=0&&iPR<5) && (iPC>=0&&iPC<5) && iTabla[iPR][iPC]!='-')
+                    {
+                        cout<<"Casilla ocupada, vuelva a introducir"<<endl;
+                        cRep='s';
+
+                    }
+
+            break;
+
+
+        case 'c':
+            iPR++;
+            iPC++;
+            if ((iPR>=0&&iPR<5) && (iPC>=0&&iPC<5) && iTabla[iPR][iPC]=='-')
+            {
+                iPRen=iPR;
+                iPCol=iPC;
+                iTabla[iPRen][iPCol]='O';
+                iNumX++;
+                iMov='s';
+                cRep='n';
+            }
+                else
+                if ((iPR<0 || iPR>5)||(iPC<0 || iPR>5))
+                {
+                    iMov='n';
+                    cRep='n';
+                    cout<<"Perdiste turno"<<endl;
+                }
+                else
+                    if ((iPR>=0&&iPR<5) && (iPC>=0&&iPC<5) && iTabla[iPR][iPC]!='-')
+                    {
+                        cout<<"Casilla ocupada, vuelva a introducir"<<endl;
+                        cRep='s';
+
+                    }
+
+                break;
+
+        default:
+            cout<<"Movimiento inexistente: Vuelve a introducir"<<endl;
+        }
+
+    }while((cMove!='a' && cMove!='x' && cMove!='w' && cMove!='d' && cMove!='q' && cMove!='e' && cMove!='z' && cMove!='c') || cRep=='s' );
+
+}
+
+
+
+//Funcion para desplegar el puntaje
+void suma(int &iSuma, int &iNumX, int &iNumY)
+{
+    cout<<"El puntaje del Jugador 1 es: "<<iNumX<<endl;
+    cout<<"El puntaje del Jugador 2 es: "<<iNumY<<endl;
+
+
+    iSuma=iNumX+iNumY;
+}
+
+
+
+//Funcion para verificar si sigue el juego
+void seguirjugando(char &cSeguir)
+{
+    do{
+        cout<<"Seguir? (s/n)"<<endl;
+        cin>>cSeguir;
+        cout<<endl;
+    }while(cSeguir!='n' && cSeguir!='N' && cSeguir!='S' && cSeguir!='s');
+
+}
+
+
+
+
+//FUncion para modificar fichas alrededor del jugador 1
+void cambiaralrededor1(char iTabla[10][10], int iRen, int iCol, int &iNumX, int &iNumY)
+{
+    int iRen2, iCol2;
+    for (int iCont=0; iCont<8; iCont++)
+    {
+        switch (iCont)
+        {case 0:
+            iRen2=iRen;
+            iCol2=iCol;
+            iRen2++;
+            if (iTabla[iRen2][iCol2]=='O')
+            {
+                iTabla[iRen2][iCol2]='X';
+                iNumX++;
+                iNumY--;
+            }
+
+            break;
+
+        case 1:
+            iRen2=iRen;
+            iCol2=iCol;
+            iRen2--;
+            if (iTabla[iRen2][iCol2]=='O')
+            {
+                iTabla[iRen2][iCol2]='X';
+                iNumX++;
+                iNumY--;
+            }
+
+            break;
+
+        case 2:
+            iRen2=iRen;
+            iCol2=iCol;
+            iCol2++;
+            if (iTabla[iRen2][iCol2]=='O')
+            {
+                iTabla[iRen2][iCol2]='X';
+                iNumX++;
+                iNumY--;
+            }
+            break;
+
+        case 3:
+            iRen2=iRen;
+            iCol2=iCol;
+            iCol2--;
+            if (iTabla[iRen2][iCol2]=='O')
+            {
+                iTabla[iRen2][iCol2]='X';
+                iNumX++;
+                iNumY--;
+            }
+            break;
+
+        case 4:
+            iRen2=iRen;
+            iCol2=iCol;
+            iRen2++;
+            iCol2++;
+            if (iTabla[iRen2][iCol2]=='O')
+            {
+                iTabla[iRen2][iCol2]='X';
+                iNumX++;
+                iNumY--;
+            }
+            break;
+
+        case 5:
+            iRen2=iRen;
+            iCol2=iCol;
+            iRen2++;
+            iCol2--;
+            if (iTabla[iRen2][iCol2]=='O')
+            {
+                iTabla[iRen2][iCol2]='X';
+                iNumX++;
+                iNumY--;
+            }
+            break;
+
+        case 6:
+            iRen2=iRen;
+            iCol2=iCol;
+            iRen2--;
+            iCol2--;
+            if (iTabla[iRen2][iCol2]=='O')
+            {
+                iTabla[iRen2][iCol2]='X';
+                iNumX++;
+                iNumY--;
+            }
+            break;
+
+        case 7:
+            iRen2=iRen;
+            iCol2=iCol;
+            iRen2--;
+            iCol2++;
+            if (iTabla[iRen2][iCol2]=='O')
+            {
+                iTabla[iRen2][iCol2]='X';
+                iNumX++;
+                iNumY--;
+            }
+            break;
+
+        default:
+            cout<<"lol"<<endl;
+
+        }
+    }
+
+}
+
+//FUncion para modificar fichas alrededor del jugador 2
+void cambiaralrededor2(char iTabla[10][10], int iRen, int iCol, int &iNumX, int &iNumY)
+{
+    int iRen2, iCol2;
+    for (int iCont=0; iCont<8; iCont++)
+    {
+        switch (iCont)
+        {case 0:
+            iRen2=iRen;
+            iCol2=iCol;
+            iRen2++;
+            if (iTabla[iRen2][iCol2]=='X')
+            {
+                iTabla[iRen2][iCol2]='O';
+                iNumX--;
+                iNumY++;
+            }
+            break;
+
+        case 1:
+            iRen2=iRen;
+            iCol2=iCol;
+            iRen2--;
+            if (iTabla[iRen2][iCol2]=='X')
+            {
+                iTabla[iRen2][iCol2]='O';
+                iNumX--;
+                iNumY++;
+            }
+            break;
+
+        case 2:
+            iRen2=iRen;
+            iCol2=iCol;
+            iCol2++;
+            if (iTabla[iRen2][iCol2]=='X')
+            {
+                iTabla[iRen2][iCol2]='O';
+                iNumX--;
+                iNumY++;
+            }
+            break;
+
+        case 3:
+            iRen2=iRen;
+            iCol2=iCol;
+            iCol2--;
+            if (iTabla[iRen2][iCol2]=='X')
+            {
+                iTabla[iRen2][iCol2]='O';
+                iNumX--;
+                iNumY++;
+            }
+            break;
+
+        case 4:
+            iRen2=iRen;
+            iCol2=iCol;
+            iRen2++;
+            iCol2++;
+            if (iTabla[iRen2][iCol2]=='X')
+            {
+                iTabla[iRen2][iCol2]='O';
+                iNumX--;
+                iNumY++;
+            }
+            break;
+
+        case 5:
+            iRen2=iRen;
+            iCol2=iCol;
+            iRen2++;
+            iCol2--;
+            if (iTabla[iRen2][iCol2]=='X')
+            {
+                iTabla[iRen2][iCol2]='O';
+                iNumX--;
+                iNumY++;
+            }
+            break;
+
+        case 6:
+            iRen2=iRen;
+            iCol2=iCol;
+            iRen2--;
+            iCol2--;
+            if (iTabla[iRen2][iCol2]=='X')
+            {
+                iTabla[iRen2][iCol2]='O';
+                iNumX--;
+                iNumY++;
+            }
+            break;
+
+        case 7:
+            iRen2=iRen;
+            iCol2=iCol;
+            iRen2--;
+            iCol2++;
+            if (iTabla[iRen2][iCol2]=='X')
+            {
+                iTabla[iRen2][iCol2]='O';
+                iNumX--;
+                iNumY++;
+            }
+            break;
+
+        default:
+            cout<<"lol"<<endl;
+
+        }
+    }
+
+}
+
+
+
+
+int main()
+{
+    int iSizeR, iSizeC, iP1R, iP1C, iP2R, iP2C, iNumX, iNumO, iSuma;
+    char iTabla[10][10], iMov;
+    iSizeR=5;
+    iSizeC=5;
+
+    iNumX=2;
+    iNumO=2;
+
+    cout<<"BLOB WARS"<<" "<<"by Nestor Martinez"<<endl;
+
+    int iCont=0;
+    char cSeguir;
+
+    Tabla(iTabla, iSizeR, iSizeC, iP1R, iP1C, iP2R, iP2C, iNumX, iNumO);
+
+    do{
+        Mostrar(iTabla, iSizeR, iSizeC);
+        cout<<endl;
+        MostrarMoves();
+        cout<<endl;
+
+        suma(iSuma, iNumX, iNumO);
+        cout<<endl;
+
+        if (iCont==0 || iCont%2==0)
+        {
+            cout<<"MUEVE JUGADOR 1 (X)"<<endl;
+            casilla1(iTabla, iP1R, iP1C);
+            cout<<"Ingresa Movimiento: ";
+            moverjugador1(iTabla, iP1R, iP1C, iNumX, iNumO, iMov);
+
+            if (iMov=='s')
+                cambiaralrededor1(iTabla, iP1R, iP1C, iNumX, iNumO);
+        }
+
+
+            else
+
+                if (iCont%2!=0)
+                {
+                    cout<<"MUEVE JUGADOR 2 (O)"<<endl;
+                    casilla2(iTabla, iP2R, iP2C);
+                    cout<<"Ingresa Movimiento: ";
+                    moverjugador2(iTabla, iP2R, iP2C, iNumX, iNumO, iMov);
+
+                    if (iMov=='s')
+                        cambiaralrededor2(iTabla, iP2R, iP2C, iNumX, iNumO);
+
+                }
+
+
+            iCont++;
+
+            seguirjugando(cSeguir);
+
+
+
+    }while((cSeguir=='S'|| cSeguir=='s') && iSuma<25);
+
+    if (iNumX>iNumO)
+        cout<<"GANADOR: JUGADOR 1"<<endl;
+    else
+        if (iNumX<iNumO)
+            cout<<"GANADOR: JUGADOR 2"<<endl;
+        else
+            if (iNumX==iNumO)
+                cout<<"EMPATE"<<endl;
+
+
+    return 0;
+
+}
